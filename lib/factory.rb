@@ -1,5 +1,7 @@
 class Factory 
  def self.new(*args)
+    raise ArgumentError, "Wrong number of arguments (0 for 1+)" if args.length < 1
+
     Class.new do
       attr_accessor(*args)
 
