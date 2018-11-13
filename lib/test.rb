@@ -21,3 +21,4 @@ Customer1 = Struct.new(:name, :address) do
 end
 
 puts Customer1.new('Dave', '123 Main').greeting 
+
