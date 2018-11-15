@@ -16,7 +16,7 @@
 # - ==, eql?
 require 'pry'
 
-class Factory 
+class Factory
  def self.new(*args, &block)
     raise ArgumentError, "Wrong number of arguments (0 for 1+)" if args.length < 1
 
@@ -49,7 +49,7 @@ class Factory
         end
       end
 
-      define_method(:members) do 
+      define_method(:members) do
         instance_variables.map { |instance_var| instance_var.to_s.delete('@').to_sym}
       end
 
@@ -74,13 +74,9 @@ class Factory
       end
 
       define_method(:values_at) do |key, value|
-        res = values_at(key, value)
+        values_at(key, value)
       end
-
-      define_method(:==) do |obj|
-        self.class == obj.class && self.values == obj.values
-      end
-
+      
       define_method(:eql?) do |obj|
         self.class == obj.class && (self.values.eql? obj.values)
       end
@@ -99,8 +95,9 @@ class Factory
 
       define_method(:dig) do |*args|
           to_h.dig(*args)
-      end  
+      end
 
+      alias :== :eql?
       alias :to_a :values
       alias :size :length
     end
