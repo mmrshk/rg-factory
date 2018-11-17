@@ -79,8 +79,9 @@ RSpec.describe 'Factory' do
 
     c = Customer.new(Customer.new(b: [1, 2, 3]))
 
-    expect(c.dig(:a, :a, :b, 0)).to eq(1)
     expect(c.dig(:b, 0)).to be_nil
+    expect(c.dig(:a, :a, :b, 0)).to eq(1)
+
 
     expect { c.dig(:a, :a, :b, :c) }.to raise_error(TypeError)
   end

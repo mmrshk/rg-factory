@@ -66,16 +66,11 @@ class Factory
         end
 
         define_method(:dig) do |*args|
-          args.inject(self) {|h,a| h.fetch(a) }
+          first_arg = self[args.first]
+          return nil if first_arg.nil?
+          return first_arg.dig(*args[1..-1]) if args.respond_to?(:dig)
+          raise TypeError, "#{self.class} does not have #dig method"
         end
-
-        def fetch(name)
-          __send__(name)
-        end
-
-        #define_method(:dig) do |*args|
-         # to_h.dig(*args)
-        #end
 
         class_eval(&block) if block_given?
         alias :== :eql?
