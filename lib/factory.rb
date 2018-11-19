@@ -20,12 +20,12 @@ class Factory
         end
 
         define_method(:[]=) do |arg, value|
-          return instance_variable_set("@#{arg}", value) if (arg.is_a? String) || (arg.is_a? Symbol)
+          return instance_variable_set("@#{arg}", value) if [String, Symbol].include? arg.class
           instance_variable_set(instance_variables[arg], value) if arg.is_a? Integer
         end
 
         define_method(:[]) do |arg|
-          return instance_variable_get("@#{arg}") if (arg.is_a? String) || (arg.is_a? Symbol)
+          return instance_variable_get("@#{arg}") if [String, Symbol].include? arg.class
           instance_variable_get(instance_variables[arg]) if arg.is_a? Integer
         end
 
@@ -66,10 +66,20 @@ class Factory
         end
 
         define_method(:dig) do |*args|
-          first_arg = self[args.first]
-          return nil if first_arg.nil?
-          return first_arg.dig(*args[1..-1]) if args.respond_to?(:dig)
-          raise TypeError, "#{self.class} does not have #dig method"
+           arr = []
+           args.reduce(to_h) do |hash, i|
+           if !hash.nil?
+             if ((i.is_a? Symbol) && (!hash[i.to_sym].is_a? Array))
+               hash.replace(hash[i.to_sym].to_h)
+             elsif ((i.is_a? Symbol) && (hash[i.to_sym].is_a? Array))
+                arr = hash.to_a.replace(hash[i])
+             elsif (i.is_a? Integer)
+                return arr[i]
+             elsif hash.nil?
+                return nil
+             end
+           end
+          end
         end
 
         class_eval(&block) if block_given?
