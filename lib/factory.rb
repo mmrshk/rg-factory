@@ -66,9 +66,9 @@ class Factory
         end
 
         define_method(:dig) do |*args|
-          args.reduce(to_h) do |hash, i|
-            return unless hash[i]
-            hash[i]
+          args.reduce(to_h) do |hash, key|
+            return unless hash[key]
+            hash[key]
           end
         end
 
