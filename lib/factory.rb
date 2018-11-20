@@ -66,19 +66,9 @@ class Factory
         end
 
         define_method(:dig) do |*args|
-           arr = []
-           args.reduce(to_h) do |hash, i|
-           if !hash.nil?
-             if ((i.is_a? Symbol) && (!hash[i.to_sym].is_a? Array))
-               hash.replace(hash[i.to_sym].to_h)
-             elsif ((i.is_a? Symbol) && (hash[i.to_sym].is_a? Array))
-                arr = hash.to_a.replace(hash[i])
-             elsif (i.is_a? Integer)
-                return arr[i]
-             elsif hash.nil?
-                return nil
-             end
-           end
+          args.reduce(to_h) do |hash, i|
+            return unless hash[i]
+            hash[i]
           end
         end
 
