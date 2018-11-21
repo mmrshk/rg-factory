@@ -5,10 +5,11 @@ require 'errors/existing_class_error'
 class Factory
   class << self
     def new(*args, &block)
+      raise StringClassError unless args.first.is_a? String
       raise EmptyArgumentError if args.first.empty?
       raise ExistingClassError if args.first.is_a? Class
 
-      const_set(args.shift.capitalize, new(*args, &block)) if args.first.is_a? String
+      const_set(args.shift.capitalize, new(*args, &block))
       build_class(*args, &block)
     end
 
