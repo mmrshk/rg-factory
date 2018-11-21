@@ -1,16 +1,17 @@
 require 'pry'
-require 'errors/empty_string_error'
-require 'errors/existing_class_error'
-require 'errors/string_class_error'
+require_relative 'errors/empty_string_error'
+require_relative 'errors/existing_class_error'
 
 class Factory
   class << self
     def new(*args, &block)
-      raise StringClassError unless args.first.is_a? String
-      raise EmptyArgumentError if args.first.empty?
       raise ExistingClassError if args.first.is_a? Class
 
-      const_set(args.shift.capitalize, new(*args, &block))
+      if args.first.is_a? String
+        raise EmptyStringError if args.first.empty?
+
+        return const_set(args.shift.capitalize, new(*args, &block))
+      end
       build_class(*args, &block)
     end
 
