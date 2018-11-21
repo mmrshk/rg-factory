@@ -21,7 +21,8 @@ class Factory
 
         define_method(:initialize) do |*arg|
           raise ArgumentError, 'Extra args passed then needs' unless args.count == arg.count
-          raise NameError, 'Identifier needs to be constant' if args.reject {|arg| arg.is_a? Symbol}.any?
+          raise NameError, 'Identifier needs to be constant' if args.reject { |arg| arg.is_a? Symbol }.any?
+
           args.each_index do |i|
             instance_variable_set("@#{args[i]}", arg[i])
           end
@@ -29,16 +30,18 @@ class Factory
 
         define_method(:[]=) do |arg, value|
           return instance_variable_set("@#{arg}", value) if [String, Symbol].include? arg.class
+
           instance_variable_set(instance_variables[arg], value) if arg.is_a? Integer
         end
 
         define_method(:[]) do |arg|
           return instance_variable_get("@#{arg}") if [String, Symbol].include? arg.class
+
           instance_variable_get(instance_variables[arg]) if arg.is_a? Integer
         end
 
         define_method(:members) do
-          instance_variables.map { |var| var.to_s.delete('@').to_sym}
+          instance_variables.map { |var| var.to_s.delete('@').to_sym }
         end
 
         define_method(:each) do |&block|
@@ -74,9 +77,10 @@ class Factory
         end
 
         define_method(:dig) do |*args|
-           args.reduce(to_h) do |hash, key|
-             return unless hash[key]
-             hash[key]
+          args.reduce(to_h) do |hash, key|
+            return unless hash[key]
+
+            hash[key]
           end
         end
 
