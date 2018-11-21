@@ -1,8 +1,13 @@
 require 'pry'
+require 'errors/empty_string_error'
+require 'errors/existing_class_error'
 
 class Factory
   class << self
     def new(*args, &block)
+      raise EmptyArgumentError if args.first.empty?
+      raise ExistingClassError if args.first.is_a? Class
+
       const_set(args.shift.capitalize, new(*args, &block)) if args.first.is_a? String
       build_class(*args, &block)
     end
@@ -66,9 +71,9 @@ class Factory
         end
 
         define_method(:dig) do |*args|
-          args.reduce(to_h) do |hash, key|
-            return unless hash[key]
-            hash[key]
+           args.reduce(to_h) do |hash, key|
+             return unless hash[key]
+             hash[key]
           end
         end
 
