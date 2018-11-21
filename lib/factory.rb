@@ -1,6 +1,7 @@
 require 'pry'
 require 'errors/empty_string_error'
 require 'errors/existing_class_error'
+require 'errors/string_class_error'
 
 class Factory
   class << self
